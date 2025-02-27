@@ -53,35 +53,36 @@ margin-bottom: 20px;
     text-decoration: none;
   }
   
-  /* Fixed Sidebar */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #f8f9fa;
-    padding: 20px;
-    overflow-y: auto;
-    border-right: 1px solid #ddd;
-  }
-  .sidebar img {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 15px;
-  }
-  .sidebar .social-icons a {
-    margin: 0 5px;
-    color: #333;
-    font-size: 1.2rem;
-  }
+/* Default styles for desktop */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #f8f9fa;
+  padding: 20px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+}
 
-/* For mobile devices */
+.main-content {
+  margin-left: 270px; /* Sidebar width + spacing */
+  padding: 20px;
+}
+
+/* Responsive adjustments for mobile devices */
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%;  /* Makes sidebar full-width on small screens */
-    padding: 10px;  /* Optional: adjust padding for mobile */
+    position: static;       /* Sidebar becomes static */
+    width: 100%;            /* Full width */
+    height: auto;           /* Height adjusts automatically */
+    border-right: none;     /* Remove right border */
+    border-bottom: 1px solid #ddd; /* Optional bottom border */
+    padding: 10px;
+  }
+  .main-content {
+    margin-left: 0;         /* No left margin on mobile */
+    padding: 10px;
   }
 }
