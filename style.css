@@ -72,42 +72,59 @@ margin-bottom: 20px;
   border-radius: 50%;
   margin-bottom: 15px;
 }
-.sidebar .social-icons a {
-  margin: 0 5px;
-  color: #000;
-  font-size: 1.2rem;
+.sidebar .sidebar-info,
+.sidebar .contact-info,
+.sidebar .social-icons {
+  margin-bottom: 15px;
 }
-/* Main content offset */
+
 .main-content {
-  margin-left: 270px;
+  margin-left: 270px; /* Sidebar width plus spacing */
   padding: 20px;
 }
 
-/* Responsive adjustments for mobile devices */
+/* Mobile styles: Horizontal top bar */
 @media (max-width: 768px) {
   .sidebar {
-    position: static;       /* Sidebar becomes static */
-    width: 50%;            /* Full width */
-    height: auto;           /* Height adjusts automatically */
-    border-right: none;     /* Remove right border */
-    border-bottom: 1px solid #ddd; /* Optional bottom border */
-    padding: 10px;
+    position: static; /* Remove fixed positioning */
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
+  
+  /* Adjust image styling for horizontal layout */
   .sidebar img {
-    width: 50%;
-    height: 50%;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 15px;
+    margin-bottom: 0;
+    margin-right: 10px;
   }
-  .main-content {
-    margin-left: 0;         /* No left margin on mobile */
-    padding: 10px;
+  
+  /* Group textual information */
+  .sidebar .sidebar-info,
+  .sidebar .contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0;
+    margin-right: 10px;
   }
+  
+  /* Social icons remain inline */
   .sidebar .social-icons a {
     margin: 0 5px;
-    color: #000;
     font-size: 1.2rem;
+  }
+  
+  /* Main content takes full width on mobile */
+  .main-content {
+    margin-left: 0;
+    padding: 10px 20px;
   }
 }
 
