@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Publication Title | Amir Etefaghi Daryani</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Sidebar styling (same as other pages) */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #f8f9fa;
+      padding: 20px;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
+    }
+    .sidebar img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 15px;
+    }
+    .sidebar .social-icons a {
+      margin: 0 5px;
+      color: #000;
+      font-size: 1.2rem;
+    }
+    /* Main content offset */
+    .main-content {
+      margin-left: 270px;
+      padding: 20px;
+    }
+    /* Rounded button styling */
+    .btn-round {
+      border-radius: 50px;
+    }
+    /* Output images carousel styling */
+    .output-carousel .carousel-item {
+      text-align: center;
+      padding: 10px 0;
+    }
+    .output-carousel img {
+      max-height: 250px;
+      margin: 0 auto;
+    }
+    /* Center all text in the publication detail container */
+    .publication-detail {
+      text-align: center;
+    }
+    /* Additional spacing adjustments */
+    .publication-detail h1,
+    .publication-detail h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .publication-detail p,
+    .publication-detail pre {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <img src="images/profile.jpg" alt="Profile Picture">
+    <h5>Amir Etefaghi Daryani</h5>
+    <p>Computer Vision Researcher</p>
+    <hr>
+    <div class="contact-info">
+      <p><i class="fas fa-envelope"></i> amir.etefaghidar@ufl.edu</p>
+      <p><i class="fas fa-map-marker-alt"></i> Gainesville, FL</p>
+    </div>
+    <hr>
+    <div class="social-icons">
+      <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://scholar.google.com/" target="_blank"><i class="fas fa-graduation-cap"></i></a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">Amir Etefaghi Daryani</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="publications.html">Publications</a></li>
+            <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
+            <li class="nav-item"><a class="nav-link" href="resume.html">Resume</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Publication Detail Content -->
+    <div class="publication-detail">
+      <!-- Title -->
+      <h1>Publication Title</h1>
+      
+      <!-- Authors -->
+      <p class="lead"><strong>Authors:</strong> Author One, Author Two, Author Three</p>
+      
+      <!-- Institution -->
+      <p><strong>Institution:</strong> University/Institute Name</p>
+      
+      <!-- Conference Name and Year -->
+      <p><strong>Conference:</strong> Conference Name, 2025</p>
+      
+      <!-- Round Buttons for Paper and Code Links -->
+      <div class="mb-4">
+        <a href="https://example.com/paper.pdf" target="_blank" class="btn btn-primary btn-round me-2">
+          <i class="fas fa-file-pdf"></i> Paper
+        </a>
+        <a href="https://github.com/example/code" target="_blank" class="btn btn-secondary btn-round">
+          <i class="fab fa-github"></i> Code
+        </a>
+      </div>
+      
+      <!-- Big Image -->
+      <div class="mb-4">
+        <img src="images/publication_big.jpg" alt="Publication Main Image" class="img-fluid">
+      </div>
+      
+      <!-- Abstract -->
+      <div class="mb-4">
+        <h3>Abstract</h3>
+        <p>
+          [Insert the abstract of the publication here. This section provides a brief summary of the work, highlighting the key contributions, methodology, and results.]
+        </p>
+      </div>
+      
+      <!-- Sliding Output Images -->
+      <div class="mb-4">
+        <h3>Output Images</h3>
+        <div id="outputCarousel" class="carousel slide output-carousel" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="images/output1.jpg" class="d-block w-100" alt="Output 1">
+            </div>
+            <div class="carousel-item">
+              <img src="images/output2.jpg" class="d-block w-100" alt="Output 2">
+            </div>
+            <div class="carousel-item">
+              <img src="images/output3.jpg" class="d-block w-100" alt="Output 3">
+            </div>
+            <!-- Add more items as needed -->
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#outputCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#outputCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Bibtex -->
+      <div class="mb-4">
+        <h3>Bibtex</h3>
+        <pre>
+@article{paper2025,
+  title={Publication Title},
+  author={Author One and Author Two and Author Three},
+  journal={Conference Name},
+  year={2025},
+  publisher={Publisher}
+}
+        </pre>
+      </div>
+      
+      <!-- Back Button -->
+      <a href="publications.html" class="btn btn-secondary">Back to Publications</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+      <p>&copy; 2025 Amir Etefaghi Daryani. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

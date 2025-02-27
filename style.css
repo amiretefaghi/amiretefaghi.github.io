@@ -1,14 +1,55 @@
 /* style.css */
-
-/* Hero section styling */
-.hero-section {
-    background-size: cover;
-    background-position: center;
-    padding: 150px 0;
+  
+/* Main Content: Reduced vertical spacing */
+.main-content {
+    margin-left: 270px; /* Sidebar offset */
+    padding: 10px 20px;
   }
   
-  /* Add custom styles below as needed */
-  body {
-    padding-top: 70px; /* To account for fixed navbar */
+/* Hero section styling */
+.hero-section {
+    /* Set a smaller height */
+    height: 10px;
+    /* Remove any background image if previously set */
+    background-image: none;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+/* Adjust carousel item padding to reduce vertical space */
+.achievement-carousel .carousel-item {
+padding: 20px 0;
+}
+
+/* Optional: Adjust section margins for all sections */
+section {
+margin-top: 20px;
+margin-bottom: 20px;
+}
+  
+/* Set carousel indicator bullets to black */
+.carousel-indicators [data-bs-target] {
+    background-color: #000;
+  }
+  
+  /* Ensure the active bullet remains black */
+  .carousel-indicators .active {
+    background-color: #000;
+  }
+  
+  /* Override link color within carousel items */
+  .carousel-item a {
+    color: #000 !important;
+    text-decoration: none;
+  }
+  
+  /* Optionally, override hover state for links */
+  .carousel-item a:hover {
+    color: #000 !important;
+    text-decoration: none;
   }
   
