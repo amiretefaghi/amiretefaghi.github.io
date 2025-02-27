@@ -24,8 +24,8 @@
       border-right: 1px solid #ddd;
     }
     .sidebar img {
-      width: 100px;
-      height: 100px;
+      width: 200px;
+      height: 200px;
       object-fit: cover;
       border-radius: 50%;
       margin-bottom: 15px;
@@ -72,7 +72,7 @@
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
-    <img src="images/profile.jpg" alt="Profile Picture">
+    <img src="images/me.jpg" alt="Profile Picture">
     <h5>Amir Etefaghi Daryani</h5>
     <p>Computer Vision Researcher</p>
     <hr>
@@ -82,9 +82,9 @@
     </div>
     <hr>
     <div class="social-icons">
-      <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
-      <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
-      <a href="https://scholar.google.com/" target="_blank"><i class="fas fa-graduation-cap"></i></a>
+      <a href="https://www.linkedin.com/in/amir-etefaghi/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/amiretefaghi" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://scholar.google.com/citations?user=bo6Nt6kAAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i></a>
     </div>
   </div>
 
@@ -115,74 +115,47 @@
       <h1>AdaInNet: an adaptive inference engine for distributed deep neural networks offloading in IoT-FOG applications based on reinforcement learning</h1>
       
       <!-- Authors -->
-      <p class="lead"><strong>Authors:</strong> Author One, Author Two, Author Three</p>
+      <p class="lead"><strong>Authors:</strong> Amir Etefaghi, Saeed Sharifian</p>
       
       <!-- Institution -->
-      <p><strong>Institution:</strong> University/Institute Name</p>
+      <p><strong>Institution:</strong> Amirkabir University of Technology</p>
       
       <!-- Conference Name and Year -->
-      <p><strong>Conference:</strong> Conference Name, 2025</p>
+      <p>The Journal of Supercomputing, 2022</p>
       
       <!-- Round Buttons for Paper and Code Links -->
       <div class="mb-4">
-        <a href="https://example.com/paper.pdf" target="_blank" class="btn btn-primary btn-round me-2">
+        <a href="https://link.springer.com/article/10.1007/s11227-022-04728-5" target="_blank" class="btn btn-primary btn-round me-2">
           <i class="fas fa-file-pdf"></i> Paper
         </a>
-        <a href="https://github.com/example/code" target="_blank" class="btn btn-secondary btn-round">
+        <!-- <a href="https://github.com/example/code" target="_blank" class="btn btn-secondary btn-round">
           <i class="fab fa-github"></i> Code
-        </a>
+        </a> -->
       </div>
       
       <!-- Big Image -->
       <div class="mb-4">
-        <img src="images/publication_big.jpg" alt="Publication Main Image" class="img-fluid">
+        <img src="images/AdaInNet.jpg" alt="Publication Main Image" class="img-fluid">
       </div>
       
       <!-- Abstract -->
       <div class="mb-4">
         <h3>Abstract</h3>
         <p>
-          [Insert the abstract of the publication here. This section provides a brief summary of the work, highlighting the key contributions, methodology, and results.]
+          The increasing expansion of Internet-of-Things (IoT) in the world requires Big Data analytic infrastructures to produce valuable knowledge in IoT applications. IoT includes devices with limited resources, whereby it requires efficient platforms to process massive data obtained from sensors. Nowadays, many IoT applications such as audio and video recognition depend on state-of-the-art Deep Neural Networks (DNNs). Therefore, we need to execute DNNs on IoT devices. DNNs offer excellent recognition accuracy but they suffer from high computational and memory resource demands. Due to these constraints, currently, IoT applications that depend on deep learning are mostly offloaded to cloudlets and clouds. Offloading imposes extra network bandwidth consumption costs in addition to delayed response for IoT devices. In this paper, we propose a method that instead of using all layers of DNN for inference, only selects a subset of layers that provide sufficient accuracy for each task. We propose AdaInNet, a method to significantly reduce computational cost and network latency in DNN-based IoT applications while maintaining prediction accuracy based on Distributed DNNs (DDNNs). The method uses modified Distributed DNNs with early exits in order to minimize computation costs and network latency by selecting sub-layers or exit branches of DDNNs with early exits. We also proposed a hybrid Classifier-Wise (CW)—Interactive learning method for the training of DDNNs and Agent’s networks. Furthermore, we create a custom agent model for the Advantage Actor-Critic Deep Reinforcement Learning method in order to preserve recognition accuracy while utilizing a minimum number of layers. Finally, we execute the extensive numerical simulation, in order to evaluate and compare our proposed AdaInNet method with rival methods under standard CIFAR 100 and CIFAR 10 datasets and ResNet-110 and ResNet-32 DNNs which are used in IoT applications in previous works. The results provide strong quantitative evidence that the AdaInNet method not only accelerates inference but also reduces computational cost and latency.
         </p>
       </div>
-      
-      <!-- Sliding Output Images -->
-      <div class="mb-4">
-        <h3>Output Images</h3>
-        <div id="outputCarousel" class="carousel slide output-carousel" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="images/output1.jpg" class="d-block w-100" alt="Output 1">
-            </div>
-            <div class="carousel-item">
-              <img src="images/output2.jpg" class="d-block w-100" alt="Output 2">
-            </div>
-            <div class="carousel-item">
-              <img src="images/output3.jpg" class="d-block w-100" alt="Output 3">
-            </div>
-            <!-- Add more items as needed -->
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#outputCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#outputCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
+    
       
       <!-- Bibtex -->
       <div class="mb-4">
         <h3>Bibtex</h3>
         <pre>
-@article{paper2025,
-  title={Publication Title},
-  author={Author One and Author Two and Author Three},
-  journal={Conference Name},
-  year={2025},
-  publisher={Publisher}
+@article{etefaghidar2022,
+  title={AdaInNet: an adaptive inference engine for distributed deep neural networks offloading in IoT-FOG applications based on reinforcement learning.},
+  author={Etefaghi, A., Sharifian, Se},
+  journal={The journal of supercomputing},
+  year={2022}
 }
         </pre>
       </div>

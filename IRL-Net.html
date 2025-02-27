@@ -24,8 +24,8 @@
       border-right: 1px solid #ddd;
     }
     .sidebar img {
-      width: 100px;
-      height: 100px;
+      width: 200px;
+      height: 200px;
       object-fit: cover;
       border-radius: 50%;
       margin-bottom: 15px;
@@ -72,7 +72,7 @@
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
-    <img src="images/profile.jpg" alt="Profile Picture">
+    <img src="images/me.jpg" alt="Profile Picture">
     <h5>Amir Etefaghi Daryani</h5>
     <p>Computer Vision Researcher</p>
     <hr>
@@ -82,9 +82,9 @@
     </div>
     <hr>
     <div class="social-icons">
-      <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
-      <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
-      <a href="https://scholar.google.com/" target="_blank"><i class="fas fa-graduation-cap"></i></a>
+      <a href="https://www.linkedin.com/in/amir-etefaghi/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/amiretefaghi" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://scholar.google.com/citations?user=bo6Nt6kAAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i></a>
     </div>
   </div>
 
@@ -115,34 +115,34 @@
       <h1>IRL-Net: Inpainted region localization network via spatial attention</h1>
       
       <!-- Authors -->
-      <p class="lead"><strong>Authors:</strong> Author One, Author Two, Author Three</p>
+      <p class="lead"><strong>Authors:</strong> Amir Etefaghi Daryani, Mahdieh Mirmahdi, Ahmad Hassanpour, Hatef Otroshi Shahreza, Bian Yang, Julian Fierrez</p>
       
       <!-- Institution -->
-      <p><strong>Institution:</strong> University/Institute Name</p>
+      <!-- <p><strong>Institution:</strong> University/Institute Name</p> -->
       
       <!-- Conference Name and Year -->
-      <p><strong>Conference:</strong> Conference Name, 2025</p>
+      <p>IEEE ACCESS, 2023</p>
       
       <!-- Round Buttons for Paper and Code Links -->
       <div class="mb-4">
-        <a href="https://example.com/paper.pdf" target="_blank" class="btn btn-primary btn-round me-2">
+        <a href="https://ieeexplore.ieee.org/abstract/document/10285582" target="_blank" class="btn btn-primary btn-round me-2">
           <i class="fas fa-file-pdf"></i> Paper
         </a>
-        <a href="https://github.com/example/code" target="_blank" class="btn btn-secondary btn-round">
+        <a href="https://github.com/amiretefaghi/IRL-Net" target="_blank" class="btn btn-secondary btn-round">
           <i class="fab fa-github"></i> Code
         </a>
       </div>
       
       <!-- Big Image -->
       <div class="mb-4">
-        <img src="images/publication_big.jpg" alt="Publication Main Image" class="img-fluid">
+        <img src="images/IRL-Net.png" alt="Publication Main Image" class="img-fluid">
       </div>
       
       <!-- Abstract -->
       <div class="mb-4">
         <h3>Abstract</h3>
         <p>
-          [Insert the abstract of the publication here. This section provides a brief summary of the work, highlighting the key contributions, methodology, and results.]
+          Identifying manipulated regions in images is a challenging task due to the existence of very accurate image inpainting techniques leaving almost unnoticeable traces in tampered regions. These image inpainting methods can be used for multiple purposes (e.g., removing objects, reconstructing corrupted areas, eliminating various types of distortion, etc.) makes creating forensic detectors for image manipulation an extremely difficult and time-consuming procedure. The aim of this paper is to localize the tampered regions manipulated by image inpainting methods. To do this, we propose a novel CNN-based deep learning model called IRL-Net which includes three main modules: Enhancement, Encoder, and Decoder modules. To evaluate our method, three image inpainting methods have been used to reconstruct the missed regions in two face and scene image datasets. We perform both qualitative and quantitative evaluations on the generated datasets. Experimental results demonstrate that our method outperforms previous learning-based manipulated region detection methods and generates realistic and semantically plausible images.
         </p>
       </div>
       
