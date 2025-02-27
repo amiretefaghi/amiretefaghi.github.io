@@ -12,10 +12,6 @@
     .navbar {
       border-bottom: 1px solid #ddd;
     }
-    /* Footer */
-    footer {
-      margin-top: 20px;
-    }
   </style>
 </head>
 <body>
@@ -64,24 +60,66 @@
     <div class="row">
       <div class="col-md-4">
         <div class="card mb-4">
-          <img src="images/project1.jpg" class="card-img-top" alt="Project 1">
+          <img src="images/CaMuViD.png" class="card-img-top" alt="Project 1">
           <div class="card-body">
-            <h5 class="card-title">Project Title 1</h5>
-            <p class="card-text">Brief description of the project.</p>
-            <a href="project1-details.html" class="btn btn-primary">Learn More</a>
+            <h5 class="card-title">CaMuViD: Calibration-Free Multi-View Detection</h5>
+            <p class="card-text">Multi-view object detection in crowded environments presents significant challenges, particularly for occlusion management across multiple camera views. 
+              This project introduces a novel approach that extends conventional multi-view detection to operate directly within each camera's image space. 
+              Our method finds objects bounding boxes for images from various perspectives without resorting to a bird’s eye view (BEV) representation. 
+              Thus, our approach removes the need for camera calibration by leveraging a learnable architecture that facilitates flexible transformations and improves feature fusion across perspectives to increase detection accuracy. 
+              We used Python and PyTorch for implementation.</p>
+            <a href="Camuvid.html" class="btn btn-primary">Learn More</a>
           </div>
         </div>
       </div>
-      <!-- Repeat for additional projects -->
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <!-- <img src="images/.png" class="card-img-top" alt="Project 1"> -->
+          <div class="card-body">
+            <h5 class="card-title">A Real-Time System for Correlating Belongings with Passengers Towards Real Airport</h5>
+            <p class="card-text">Our research group is proud to contribute to the CLASP (Correlating Luggage and Specific Passengers) project, which is
+              funded by the U.S. Department of Homeland Security Science and Technology Directorate through ALERT. This initiative
+              aims to enhance security at checkpoints by utilizing advanced video analytics to automatically track passengers and their
+              belongings.</p>
+            <!-- <a href="Camuvid.html" class="btn btn-primary">Learn More</a> -->
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <img src="images/EtoF.jpg" class="card-img-top" alt="Project 3">
+          <div class="card-body">
+            <h5 class="card-title">E2F-GAN: Eyes-to-Face Inpainting via Edge-Aware Coarse-to-Fine GANs</h5>
+            <p class="card-text">Face inpainting is a challenging task aiming to fill the damaged or masked regions in face images with plausibly
+              synthesized contents. Based on the given information, the reconstructed regions should look realistic and more
+              importantly preserve the demographic and biometric properties of the individual. The aim of this project was to
+              reconstruct the face based on the periocular region (eyes-to-face).</p>
+            <a href="EtoF.html" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <img src="images/IRL-Net.png" class="card-img-top" alt="Project 4">
+          <div class="card-body">
+            <h5 class="card-title">IRL-Net: Inpainted Region Localization Network via Spatial Attention</h5>
+            <p class="card-text">Identifying manipulated regions in images is a challenging task due to the existence of very accurate image inpainting
+              techniques leaving almost unnoticeable traces in tampered regions. These image inpainting methods can be used for
+              multiple purposes (e.g., removing objects, reconstructing corrupted areas, eliminating various types of distortion, etc.)
+              makes creating forensic detectors for image manipulation an extremely difficult and time-consuming procedure. The aim
+              of this project was to localize the tampered regions manipulated by image inpainting methods.</p>
+            <a href="IRL-Net.html" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
     </div>
+    <!-- Footer -->
+    <!-- <footer class="bg-dark text-white text-center py-3">
+      <div class="container">
+        <p>&copy; 2025 Amir Etefaghi Daryani. All Rights Reserved.</p>
+      </div>
+    </footer> -->
   </div>
-
-  <!-- Footer -->
-  <footer class="bg-dark text-white text-center py-3">
-    <div class="container">
-      <p>&copy; 2025 Amir Etefaghi Daryani. All Rights Reserved.</p>
-    </div>
-  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

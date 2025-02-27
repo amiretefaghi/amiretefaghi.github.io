@@ -1,11 +1,5 @@
 /* style.css */
   
-/* Main Content: Reduced vertical spacing */
-.main-content {
-    margin-left: 270px; /* Sidebar offset */
-    padding: 10px 20px;
-  }
-  
 /* Hero section styling */
 .hero-section {
     /* Set a smaller height */
@@ -64,6 +58,7 @@ margin-bottom: 20px;
   padding: 20px;
   overflow-y: auto;
   border-right: 1px solid #ddd;
+  margin-left: 23%; /* Sidebar width plus spacing */
 }
 .sidebar img {
   width: 200px;
@@ -79,7 +74,8 @@ margin-bottom: 20px;
 }
 
 .main-content {
-  margin-left: 270px; /* Sidebar width plus spacing */
+  margin-left: 30%; /* Sidebar width plus spacing */
+  margin-right: 30%; /* Sidebar width plus spacing */
   padding: 20px;
 }
 
@@ -128,3 +124,8 @@ margin-bottom: 20px;
   }
 }
 
+/* Footer */
+footer {
+  margin-bottom: 0;
+  margin-top: 100%;
+}

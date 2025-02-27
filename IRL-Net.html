@@ -21,7 +21,7 @@
       padding: 10px 0;
     }
     .output-carousel img {
-      max-height: 250px;
+      max-height: 100%;
       margin: 0 auto;
     }
     /* Center all text in the publication detail container */
@@ -42,7 +42,7 @@
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="sidebar">
+  <!-- <div class="sidebar">
     <img src="images/me.jpg" alt="Profile Picture">
     <div class="sidebar-info">
       <h5>Amir Etefaghi Daryani</h5>
@@ -57,14 +57,15 @@
       <a href="https://www.linkedin.com/in/amir-etefaghi/" target="_blank"><i class="fab fa-linkedin"></i></a>
       <a href="https://github.com/amiretefaghi" target="_blank"><i class="fab fa-github"></i></a>
       <a href="https://scholar.google.com/citations?user=bo6Nt6kAAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i></a>
-      <!-- Add more social icons as needed -->
     </div>
-  </div>  
+  </div>   -->
 
   <!-- Main Content -->
   <div class="main-content">
+    <!-- Back Button -->
+    <a href="publications.html" class="btn btn-secondary">Back to Publications</a>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
       <div class="container-fluid">
         <a class="navbar-brand" href="index.html">Amir Etefaghi Daryani</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -80,7 +81,7 @@
           </ul>
         </div>
       </div>
-    </nav>
+    </nav> -->
 
     <!-- Publication Detail Content -->
     <div class="publication-detail">
@@ -88,7 +89,14 @@
       <h1>IRL-Net: Inpainted region localization network via spatial attention</h1>
       
       <!-- Authors -->
-      <p class="lead"><strong>Authors:</strong> Amir Etefaghi Daryani, Mahdieh Mirmahdi, Ahmad Hassanpour, Hatef Otroshi Shahreza, Bian Yang, Julian Fierrez</p>
+      <p class="lead"><strong>Authors:</strong> 
+        <a href="https://amiretefaghi.github.io/" target="_blank">Amir Etefaghi Daryani</a>, 
+        <a href="https://www.linkedin.com/in/mahdieh-mirmahdi-432723211/" target="_blank">Mahdieh Mirmahdi</a>, 
+        <a href="https://scholar.google.com/citations?user=oVOWJ5UAAAAJ&hl=en/" target="_blank">Ahmad Hassanpour</a>, 
+        <a href="https://scholar.google.com/citations?user=zFHgwcAAAAAJ&hl=en/" target="_blank">Hatef Otroshi Shahreza</a>, 
+        <a href="https://scholar.google.com/citations?user=eMM6sksAAAAJ&hl=en" target="_blank">Bian Yang</a>, 
+        <a href="https://scholar.google.com/citations?user=HbG_NOoAAAAJ&hl=en/" target="_blank">Julian Fierrez</a></p>
+      </p>
       
       <!-- Institution -->
       <!-- <p><strong>Institution:</strong> University/Institute Name</p> -->
@@ -125,13 +133,13 @@
         <div id="outputCarousel" class="carousel slide output-carousel" data-bs-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <img src="images/output1.jpg" class="d-block w-100" alt="Output 1">
+              <img src="images/irl_output1.png" class="d-block w-100" alt="Output 1">
             </div>
             <div class="carousel-item">
-              <img src="images/output2.jpg" class="d-block w-100" alt="Output 2">
+              <img src="images/irl_output2.png" class="d-block w-100" alt="Output 2">
             </div>
             <div class="carousel-item">
-              <img src="images/output3.jpg" class="d-block w-100" alt="Output 3">
+              <img src="images/irl_output3.png" class="d-block w-100" alt="Output 3">
             </div>
             <!-- Add more items as needed -->
           </div>
@@ -150,27 +158,30 @@
       <div class="mb-4">
         <h3>Bibtex</h3>
         <pre>
-@article{paper2025,
-  title={Publication Title},
-  author={Author One and Author Two and Author Three},
-  journal={Conference Name},
-  year={2025},
-  publisher={Publisher}
-}
+          @ARTICLE{10285582,
+            author={Daryani, Amir Etefaghi and Mirmahdi, Mahdieh and Hassanpour, Ahmad and Shahreza, Hatef Otroshi and Yang, Bian and Fierrez, Julian},
+            journal={IEEE Access}, 
+            title={IRL-Net: Inpainted Region Localization Network via Spatial Attention}, 
+            year={2023},
+            volume={11},
+            number={},
+            pages={115677-115687},
+            keywords={Feature extraction;Location awareness;Decoding;Training;Streaming media;Image reconstruction;Convolutional neural networks;Forensics;Image forensics;image inpainting;image manipulation detection},
+            doi={10.1109/ACCESS.2023.3324541}}
         </pre>
       </div>
       
       <!-- Back Button -->
       <a href="publications.html" class="btn btn-secondary">Back to Publications</a>
     </div>
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+      <div class="container">
+        <p>&copy; 2025 Amir Etefaghi Daryani. All Rights Reserved.</p>
+      </div>
+    </footer>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-dark text-white text-center py-3">
-    <div class="container">
-      <p>&copy; 2025 Amir Etefaghi Daryani. All Rights Reserved.</p>
-    </div>
-  </footer>
 
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
