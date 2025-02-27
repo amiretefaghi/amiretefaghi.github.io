@@ -53,7 +53,7 @@ margin-bottom: 20px;
     text-decoration: none;
   }
   
-/* Default styles for desktop */
+/* Fixed Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -65,9 +65,21 @@ margin-bottom: 20px;
   overflow-y: auto;
   border-right: 1px solid #ddd;
 }
-
+.sidebar img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+.sidebar .social-icons a {
+  margin: 0 5px;
+  color: #000;
+  font-size: 1.2rem;
+}
+/* Main content offset */
 .main-content {
-  margin-left: 270px; /* Sidebar width + spacing */
+  margin-left: 270px;
   padding: 20px;
 }
 
@@ -81,8 +93,21 @@ margin-bottom: 20px;
     border-bottom: 1px solid #ddd; /* Optional bottom border */
     padding: 10px;
   }
+  .sidebar img {
+    width: 50%;
+    height: 50%;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+  }
   .main-content {
     margin-left: 0;         /* No left margin on mobile */
     padding: 10px;
   }
+  .sidebar .social-icons a {
+    margin: 0 5px;
+    color: #000;
+    font-size: 1.2rem;
+  }
 }
+
