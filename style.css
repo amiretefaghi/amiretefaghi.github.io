@@ -1,0 +1,14 @@
+/* style.css */
+
+/* Hero section styling */
+.hero-section {
+    background-size: cover;
+    background-position: center;
+    padding: 150px 0;
+  }
+  
+  /* Add custom styles below as needed */
+  body {
+    padding-top: 70px; /* To account for fixed navbar */
+  }
+  
