@@ -120,6 +120,7 @@ margin-bottom: 20px;
   /* Main content takes full width on mobile */
   .main-content {
     margin-left: 0;
+    margin-right: 0;
     padding: 10px 20px;
   }
 }
