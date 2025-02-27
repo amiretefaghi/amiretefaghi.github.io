@@ -75,7 +75,7 @@ margin-bottom: 20px;
 @media (max-width: 768px) {
   .sidebar {
     position: static;       /* Sidebar becomes static */
-    width: 100%;            /* Full width */
+    width: 50%;            /* Full width */
     height: auto;           /* Height adjusts automatically */
     border-right: none;     /* Remove right border */
     border-bottom: 1px solid #ddd; /* Optional bottom border */
