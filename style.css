@@ -69,9 +69,13 @@ margin-bottom: 20px;
   margin-bottom: 15px;
 }
 .sidebar .sidebar-info,
-.sidebar .contact-info,
-.sidebar .social-icons {
+.sidebar .contact-info {
   margin-bottom: 15px;
+}
+
+.sidebar .social-icons{
+  margin-bottom: 15px;
+  font-size: 25px;
 }
 
 .main-content {
