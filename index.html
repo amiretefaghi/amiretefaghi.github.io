@@ -1,228 +1,1103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Amir Etefaghi Daryani | Computer Vision Researcher</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    /* Enable smooth scrolling */
-    html {
-      scroll-behavior: smooth;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amir Etefaghi Daryani · Computer Vision Researcher</title>
+<meta name="description" content="Amir Etefaghi Daryani — Computer Vision Researcher at the University of Florida. 3D shape reconstruction, multi-view geometry, and superquadric primitive abstraction for spatial computing.">
+<meta name="theme-color" content="#0b0f13">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --bg-alt:#101010;
+    --surface:#151515;
+    --surface-2:#1c1c1c;
+    --border:#2c2c2c;
+    --border-soft:#1e1e1e;
+    --text:#f3f3f1;
+    --text-muted:#9a9a97;
+    --text-dim:#5a5a58;
+    --accent:#ffffff;
+    --accent-dim:#7c7c79;
+    --warm:#c9c9c6;
+    --rec:#e9e9e6;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Source Serif 4', Georgia, serif;
+    --font-mono:'JetBrains Mono', ui-monospace, monospace;
+    --frame-pad: 22px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background:var(--accent); color:#0b0f13; }
+
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+
+  h1,h2,h3,h4{ font-family:var(--font-display); margin:0; letter-spacing:-0.01em; }
+
+  .mono{ font-family:var(--font-mono); }
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    border-radius:2px;
+  }
+
+  .vf-corner{
+    position:fixed;
+    width:26px; height:26px;
+    border-color:var(--border);
+    z-index:60;
+    pointer-events:none;
+    opacity:.85;
+  }
+  .vf-corner.tl{ top:var(--frame-pad); left:var(--frame-pad); border-top:1px solid var(--border); border-left:1px solid var(--border); }
+  .vf-corner.tr{ top:var(--frame-pad); right:var(--frame-pad); border-top:1px solid var(--border); border-right:1px solid var(--border); }
+  .vf-corner.bl{ bottom:var(--frame-pad); left:var(--frame-pad); border-bottom:1px solid var(--border); border-left:1px solid var(--border); }
+  .vf-corner.br{ bottom:var(--frame-pad); right:var(--frame-pad); border-bottom:1px solid var(--border); border-right:1px solid var(--border); }
+
+  .scene-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
   
-    /* Hero Section */
-    .hero-section {
-      background-image: url('images/hero-bg.jpg');
-      background-size: cover;
-      background-position: center;
-      height: 400px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      text-align: center;
-    }
-    /* Scroll arrow styling */
-    .scroll-down {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 2rem;
-      color: #fff;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    /* Carousel styling */
-    .achievement-carousel .carousel-item {
-      text-align: center;
-      padding: 40px 0;
-    }
-  </style>
+  #masterScene {
+    width: 100vmin;
+    height: 100vmin;
+    overflow: visible;
+  }
+  @media (max-width:1100px){
+    #masterScene { transform: translateX(20%); opacity: 0.5; }
+  }
+  @media (max-width:820px){
+    #masterScene { display:none; }
+  }
+
+  .scene-label { fill:#9a9a96; font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.06em; opacity: 0; transition: opacity 0.3s; }
+  .scene-label.active { opacity: 1; }
+
+  .page{ position:relative; z-index:1; }
+
+  .hud{
+    position:fixed; top:0; left:0; right:0;
+    z-index:55;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px var(--frame-pad);
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.06em;
+    color:var(--text-dim);
+    pointer-events:none;
+    background:linear-gradient(to bottom, rgba(11,15,19,.9), rgba(11,15,19,0));
+  }
+  .hud-left, .hud-right{ display:flex; align-items:center; gap:18px; }
+  .rec-dot{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--rec);
+    display:inline-block;
+    margin-right:6px;
+    animation:blink 1.6s ease-in-out infinite;
+  }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
+  .hud-item{ display:flex; align-items:baseline; gap:5px; }
+  .hud-item .lbl{ color:var(--text-dim); }
+  .hud-item .val{ color:var(--text-muted); }
+  @media (max-width:760px){
+    .hud .hide-mobile{ display:none; }
+  }
+
+  .sidenav{
+    position:fixed;
+    left:var(--frame-pad);
+    top:50%;
+    transform:translateY(-50%);
+    z-index:56;
+    display:flex; flex-direction:column; gap:14px;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:.08em;
+  }
+  .sidenav a{
+    color:var(--text-dim);
+    display:flex; align-items:center; gap:9px;
+    transition:color .25s ease;
+  }
+  .sidenav a .dash{
+    width:14px; height:1px; background:var(--text-dim);
+    transition:all .25s ease;
+  }
+  .sidenav a.active, .sidenav a:hover{ color:var(--accent); }
+  .sidenav a.active .dash, .sidenav a:hover .dash{ background:var(--accent); width:22px; }
+  @media (max-width:900px){ .sidenav{ display:none; } }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 var(--frame-pad); }
+  section{ padding:130px 0 60px; position:relative; }
+  section + section{ border-top:1px solid var(--border-soft); }
+
+  .frame-label{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:.14em;
+    color:var(--accent);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:18px;
+  }
+  .frame-label::before{ content:'['; color:var(--text-dim); }
+  .frame-label::after{ content:']'; color:var(--text-dim); }
+  .frame-label .fnum{ color:var(--text-dim); }
+
+  .sec-title{
+    font-size:clamp(28px, 4vw, 42px);
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .sec-sub{
+    color:var(--text-muted);
+    font-family:var(--font-mono);
+    font-size:13.5px;
+    margin-bottom:44px;
+    max-width:560px;
+  }
+
+  .hero{
+    min-height:100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding-top:120px;
+    border-top:none;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:56px;
+    align-items:center;
+  }
+  @media (max-width:820px){ .hero-grid{ grid-template-columns:1fr; gap:44px; } }
+
+  .hero-eyebrow{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:.16em;
+    color:var(--accent);
+    margin-bottom:22px;
+    display:block;
+  }
+  .hero h1{
+    font-size:clamp(38px, 6vw, 64px);
+    line-height:1.02;
+    font-weight:700;
+  }
+  .hero .role{
+    font-family:var(--font-mono);
+    font-size:15px;
+    color:var(--text-muted);
+    margin-top:18px;
+    letter-spacing:.02em;
+  }
+  .hero p.tagline{
+    font-family:var(--font-body);
+    font-size:19px;
+    color:var(--text-muted);
+    max-width:480px;
+    margin-top:22px;
+  }
+  .hero-facts{
+    display:flex; flex-wrap:wrap; gap:22px 30px;
+    margin-top:34px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-dim);
+  }
+  .hero-facts .f-val{ color:var(--text-muted); display:block; margin-top:3px; font-size:13px;}
+  .hero-links{
+    display:flex; flex-wrap:wrap; gap:12px;
+    margin-top:38px;
+  }
+  .btn{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:.04em;
+    padding:11px 18px;
+    border:1px solid var(--border);
+    border-radius:3px;
+    color:var(--text-muted);
+    transition:all .2s ease;
+  }
+  .btn:hover{ border-color:var(--accent); color:var(--accent); }
+  .btn.primary{ border-color:var(--accent-dim); color:var(--accent); }
+  .btn.primary:hover{ background:var(--accent); color:#0b0f13; }
+
+  .portrait-box{
+    position:relative;
+    max-width:360px;
+    margin:0 auto;
+  }
+  .portrait-frame{
+    position:relative;
+    border:1px solid var(--border);
+    padding:0;
+    overflow:visible;
+  }
+  .portrait-frame img{
+    width:100%;
+    display:block;
+    filter:grayscale(15%) contrast(1.03);
+  }
+  .bbox{
+    position:absolute; inset:0;
+    border:1.5px solid var(--accent);
+    pointer-events:none;
+  }
+  .bbox::before, .bbox::after{
+    content:'';
+    position:absolute;
+    width:10px; height:10px;
+    border-color:var(--accent);
+  }
+  .bbox-tag{
+    position:absolute;
+    top:-26px; left:-1.5px;
+    background:var(--accent);
+    color:#0b0f13;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    font-weight:600;
+    padding:3px 7px;
+    white-space:nowrap;
+    letter-spacing:.02em;
+  }
+  .corner-tick{
+    position:absolute; width:14px; height:14px;
+    border-color:var(--accent);
+    opacity:.9;
+  }
+  .corner-tick.tl{ top:-7px; left:-7px; border-top:2px solid; border-left:2px solid; }
+  .corner-tick.tr{ top:-7px; right:-7px; border-top:2px solid; border-right:2px solid; }
+  .corner-tick.bl{ bottom:-7px; left:-7px; border-bottom:2px solid; border-left:2px solid; }
+  .corner-tick.br{ bottom:-7px; right:-7px; border-bottom:2px solid; border-right:2px solid; }
+
+  .scroll-cue{
+    position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:.18em;
+    color:var(--text-dim);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .scroll-cue .bar{ width:1px; height:28px; background:linear-gradient(var(--accent), transparent); animation:scrollpulse 1.8s ease-in-out infinite; }
+  @keyframes scrollpulse{ 0%{ transform:scaleY(0.3); opacity:.3;} 50%{ transform:scaleY(1); opacity:1;} 100%{ transform:scaleY(.3); opacity:.3;} }
+
+  .now-lead{ font-size:19px; max-width:680px; color:var(--text); margin-bottom:46px; }
+  .now-lead em{ font-style:normal; color:var(--accent); }
+
+  .chip-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:760px){ .chip-row{ grid-template-columns:1fr; } }
+  .chip{
+    border:1px solid var(--border);
+    background:var(--surface);
+    padding:20px;
+    border-radius:4px;
+  }
+  .chip .chip-tag{
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em;
+    color:var(--accent); margin-bottom:10px; display:block;
+  }
+  .chip h4{ font-size:17px; margin-bottom:8px; }
+  .chip p{ font-size:14.5px; color:var(--text-muted); margin:0; }
+
+  .last-ping{
+    margin-top:36px;
+    font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim);
+    border-top:1px solid var(--border-soft); padding-top:20px;
+  }
+  .last-ping .val{ color:var(--warm); }
+
+  .about-grid{ display:grid; grid-template-columns:1.4fr .8fr; gap:60px; }
+  @media (max-width:820px){ .about-grid{ grid-template-columns:1fr; gap:36px; } }
+  .about-grid p{ margin:0 0 18px; color:var(--text-muted); font-size:16.5px; }
+  .about-grid p:first-child{ color:var(--text); font-size:18px; }
+
+  .stat-list{ display:flex; flex-direction:column; gap:0; }
+  .stat{
+    display:flex; align-items:baseline; justify-content:space-between;
+    padding:16px 0;
+    border-bottom:1px solid var(--border-soft);
+    font-family:var(--font-mono);
+  }
+  .stat .num{ font-size:26px; color:var(--accent); font-weight:600; }
+  .stat .lbl{ font-size:11.5px; color:var(--text-dim); letter-spacing:.06em; text-align:right; }
+
+  .timeline{ position:relative; padding-left:26px; }
+  .timeline::before{ content:''; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background:var(--border); }
+  .t-item{ position:relative; padding-bottom:34px; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{
+    content:''; position:absolute; left:-26px; top:5px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--bg); border:1.5px solid var(--accent);
+  }
+  .t-date{ font-family:var(--font-mono); font-size:11.5px; color:var(--accent); letter-spacing:.06em; margin-bottom:5px; }
+  .t-title{ font-family:var(--font-display); font-size:16.5px; font-weight:600; margin-bottom:4px; }
+  .t-desc{ font-size:14.5px; color:var(--text-muted); max-width:560px; }
+
+  .pub-list{ display:flex; flex-direction:column; }
+  .pub{
+    display:grid;
+    grid-template-columns:56px 1fr auto;
+    gap:20px;
+    align-items:start;
+    padding:22px 0;
+    border-bottom:1px solid var(--border-soft);
+  }
+  @media (max-width:700px){ .pub{ grid-template-columns:40px 1fr; } .pub .pub-venue{ grid-column:1 / -1; margin-top:6px; } }
+  .pub-idx{ font-family:var(--font-mono); font-size:13px; color:var(--text-dim); padding-top:3px; }
+  .pub-title{ font-family:var(--font-display); font-size:17px; font-weight:600; margin-bottom:6px; }
+  .pub-meta{ font-size:14px; color:var(--text-muted); }
+  .pub-venue{
+    font-family:var(--font-mono); font-size:11px; color:var(--accent);
+    border:1px solid var(--accent-dim); padding:5px 10px; border-radius:3px;
+    white-space:nowrap; height:fit-content;
+  }
+
+  .proj-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  @media (max-width:760px){ .proj-grid{ grid-template-columns:1fr; } }
+  .proj-card{
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:5px;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .proj-card:hover{ border-color:var(--accent-dim); transform:translateY(-3px); }
+  .proj-media{ position:relative; aspect-ratio:16/10; overflow:hidden; background:var(--surface-2); }
+  .proj-media img{ width:100%; height:100%; object-fit:cover; filter:grayscale(35%) contrast(1.05); transition:filter .3s ease; }
+  .proj-card:hover .proj-media img{ filter:grayscale(0%) contrast(1.05); }
+  .proj-tag{
+    position:absolute; top:10px; left:10px;
+    font-family:var(--font-mono); font-size:10px; letter-spacing:.03em;
+    background:rgba(11,15,19,.85); color:var(--accent);
+    border:1px solid var(--accent-dim);
+    padding:3px 8px; border-radius:2px;
+    opacity:0; transform:translateY(-4px);
+    transition:all .25s ease;
+  }
+  .proj-card:hover .proj-tag{ opacity:1; transform:translateY(0); }
+  .proj-body{ padding:22px; display:flex; flex-direction:column; flex:1; }
+  .proj-body h4{ font-size:17.5px; margin-bottom:10px; line-height:1.3; }
+  .proj-body p{ font-size:14px; color:var(--text-muted); margin:0 0 16px; flex:1; }
+  .proj-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+  .proj-stack{ font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim); letter-spacing:.03em; }
+  .proj-link{ font-family:var(--font-mono); font-size:12px; color:var(--accent); }
+  .proj-link:hover{ text-decoration:underline; }
+
+  .contact-inner{ text-align:left; }
+  .contact-big{
+    font-size:clamp(30px, 5vw, 48px);
+    font-weight:600;
+    max-width:720px;
+    margin-bottom:36px;
+  }
+  .contact-big .accent{ color:var(--accent); font-style:italic; font-family:var(--font-body); font-weight:500; }
+  .contact-row{
+    display:flex; flex-wrap:wrap; gap:14px 28px;
+    align-items:center;
+    font-family:var(--font-mono);
+    font-size:13.5px;
+    margin-bottom:40px;
+  }
+  .contact-row a{ color:var(--text-muted); transition:color .2s ease; }
+  .contact-row a:hover{ color:var(--accent); }
+  .social-grid{
+    display:flex; flex-wrap:wrap; gap:10px;
+  }
+  .social-grid a{
+    font-family:var(--font-mono); font-size:11.5px;
+    border:1px solid var(--border); padding:9px 14px; border-radius:3px;
+    color:var(--text-muted);
+    transition:all .2s ease;
+  }
+  .social-grid a:hover{ border-color:var(--accent); color:var(--accent); }
+
+  footer{
+    padding:40px var(--frame-pad) 60px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--text-dim);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    max-width:1080px; margin:0 auto;
+  }
+</style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <img src="images/me.jpg" alt="Profile Picture">
-    <div class="sidebar-info">
-      <h5>Amir Etefaghi Daryani</h5>
-      <p>Computer Vision Researcher</p>
-    </div>
-    <div class="contact-info">
-      <p><i class="fas fa-envelope"></i> amir.etefaghidar@ufl.edu</p>
-      <p><i class="fas fa-map-marker-alt"></i> Gainesville, FL</p>
-    </div>
-    <hr>
-    <div class="social-icons">
-      <a href="https://www.linkedin.com/in/amir-etefaghi/" target="_blank"><i class="fab fa-linkedin"></i></a>
-      <a href="https://github.com/amiretefaghi" target="_blank"><i class="fab fa-github"></i></a>
-      <a href="https://scholar.google.com/citations?user=bo6Nt6kAAAAJ&hl=en" target="_blank"><i class="fas fa-graduation-cap"></i></a>
-      <!-- Add more social icons as needed -->
-    </div>
-  </div>  
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Amir Etefaghi Daryani</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNavbar">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="publications.html">Publications</a></li>
-            <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
-            <li class="nav-item"><a class="nav-link" href="resume.html">Resume</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+  <div class="scene-bg" aria-hidden="true">
+    <svg id="masterScene" viewBox="-300 -300 600 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <g id="realCam">
+          <rect x="-24" y="-18" width="48" height="36" rx="6" fill="#151515" stroke="#8a8a86" stroke-width="2"/>
+          <path d="M24,-9 L42,-18 L42,18 L24,9 Z" fill="#151515" stroke="#8a8a86" stroke-width="2"/>
+          <circle cx="0" cy="0" r="10" fill="#2c2c2c" stroke="#8a8a86" stroke-width="1.5"/>
+          <line x1="-12" y1="-24" x2="0" y2="-24" stroke="#8a8a86" stroke-width="3"/>
+          <circle cx="12" cy="-24" r="3" fill="#8a8a86"/>
+        </g>
+      </defs>
 
-    <!-- Hero Section
-    <header class="hero-section text-center" style="background-color: #fff;">
-      <div class="container">
-        <h1 class="display-4" style="color: #000;">Welcome to My Homepage</h1>
-        <p class="lead" style="color: #000;">Exploring the Future of Computer Vision and AI</p>
-      </div>
-    </header> -->
+      <g id="layerEnv" opacity="0">
+        <g stroke="#3d3d3a" stroke-width="2" stroke-dasharray="15 20">
+          <line x1="-80" y1="-300" x2="-80" y2="300" />
+          <line x1="80" y1="-300" x2="80" y2="300" />
+        </g>
+        <g stroke="#2c2c2c" stroke-width="4">
+          <line x1="-220" y1="-300" x2="-220" y2="300" />
+          <line x1="220" y1="-300" x2="220" y2="300" />
+        </g>
+        <g fill="#151515" stroke="#ffffff" stroke-width="2">
+          <rect x="-25" y="-55" width="50" height="110" rx="8"/>
+          <rect x="-20" y="-25" width="40" height="50" rx="4"/>
+        </g>
+        <circle cx="0" cy="0" r="140" fill="none" stroke="#3d3d3a" stroke-dasharray="3 5" stroke-width="1.5" />
+        <circle cx="0" cy="0" r="240" fill="none" stroke="#3d3d3a" stroke-dasharray="3 5" stroke-width="1.5" />
+      </g>
 
+      <g id="camLines" opacity="0" stroke="#4a4a46" stroke-width="1.5" stroke-dasharray="4 4">
+        <line x1="-200" y1="-120" x2="-60" y2="-20" />
+        <line x1="200" y1="-120" x2="60" y2="-20" />
+        <line x1="0" y1="200" x2="0" y2="60" />
+      </g>
 
-    <!-- Achievements Slider Section -->
-    <section id="achievements" class="my-3">
-      <!-- <h2 class="mb-3 text-center">Latest Achievements</h2> -->
-      <div id="achievementCarousel" class="carousel slide achievement-carousel" data-bs-ride="carousel">
-        <!-- Carousel Indicators (Bullets) -->
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#achievementCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Achievement 1"></button>
-          <button type="button" data-bs-target="#achievementCarousel" data-bs-slide-to="1" aria-label="Achievement 2"></button>
-          <button type="button" data-bs-target="#achievementCarousel" data-bs-slide-to="2" aria-label="Achievement 3"></button>
-          <button type="button" data-bs-target="#achievementCarousel" data-bs-slide-to="3" aria-label="Achievement 3"></button>
-          <!-- Add more buttons if you add more items -->
-        </div>
-        <!-- Carousel Items -->
-        <div class="carousel-inner">
+      <g id="layerPrimitives" fill="none" stroke="#8a8a86" stroke-width="2">
+        <rect id="prim1" x="-60" y="-60" width="120" height="120" rx="16" />
+        <rect id="prim2" x="-40" y="-40" width="80" height="80" rx="10" opacity="0" />
+        <rect id="prim3" x="-20" y="-20" width="40" height="40" rx="4" opacity="0" />
+        <rect id="prim4" x="-20" y="-20" width="40" height="40" rx="4" opacity="0" />
+        <rect id="prim5" x="-10" y="-10" width="20" height="20" rx="2" stroke-dasharray="2 2" opacity="0" />
+        <rect id="prim6" x="-10" y="-10" width="20" height="20" rx="2" stroke-dasharray="2 2" opacity="0" />
+      </g>
 
-          <div class="carousel-item text-center">
-            <a href="CaMuViD.html">
-              <img src="images/CaMuViD.png" class="d-block mx-auto" alt="CaMuViD" style="max-height:300px;">
-              <h3 class="mt-2">CaMuViD</h3>
-              <p class="mb-0">Accepted in Conference on Computer Vision and Pattern Recognition 2025.</p>
-            </a>
-          </div>
-          <div class="carousel-item text-center">
-            <a href="IRL-Net.html">
-              <img src="images/IRL-Net.png" class="d-block mx-auto" alt="IRL-Net" style="max-height:300px;">
-              <h3 class="mt-2">IRL-Net</h3>
-              <p class="mb-0">Published in IEEE ACCESS journal 2023.</p>
-            </a>
-          </div>
-          <div class="carousel-item text-center">
-            <a href="AdaInNet.html">
-              <img src="images/AdaInNet.jpg" class="d-block mx-auto" alt="AdaInNet" style="max-height:300px;">
-              <h3 class="mt-2">AdaInNet</h3>
-              <p class="mb-0">Published in The Journal of Supercomputing 2022.</p>
-            </a>
-          </div>
-          <div class="carousel-item active text-center">
-            <a href="EtoF.html">
-              <img src="images/EtoF.jpg" class="d-block mx-auto" alt="E2F" style="max-height:300px;">
-              <h3 class="mt-2">E2F</h3>
-              <p class="mb-0">Published in IEEE ACCESS journal 2022</p>
-            </a>
-          </div>
-          <!-- Add more achievement items as needed -->
-        </div>
-        <!-- Carousel Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#achievementCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#achievementCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-    </section>
+      <g id="layerCamsAux" opacity="0">
+        <use href="#realCam" x="200" y="-130" transform="rotate(147, 200, -130)" />
+        <use href="#realCam" x="0" y="210" transform="rotate(-90, 0, 210)" />
+      </g>
 
+      <use id="camHero" href="#realCam" x="0" y="0" transform="translate(0, 0) scale(4)" />
 
-
-
-    <!-- Latest News Section -->
-    <section id="latest-news" class="my-5">
-      <h2 class="mb-4 text-center">Latest News</h2>
-      <div class="list-group">
-        <!-- Always visible news items -->
-        <a href="#" class="list-group-item list-group-item-action">
-          <h5 class="mb-1">Accepted in Conference on Computer Vision and Pattern Recognition (CVPR) 2025</h5>
-          <!-- <p class="mb-1">Brief summary of the news update.</p> -->
-          <small>Posted on February 26, 2025</small>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action">
-          <h5 class="mb-1">Presented in American Society of Agricultural and Biological Engineer (ASABE) 2024</h5>
-          <!-- <p class="mb-1">Brief summary of another news update.</p> -->
-          <small>Posted on July 30, 2024</small>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action">
-          <h5 class="mb-1">Starting my journey as a Ph.D. student</h5>
-          <!-- <p class="mb-1">Brief summary of another news update.</p> -->
-          <small>Posted on May 15, 2023</small>
-        </a>
-        <!-- Hidden news items -->
-        <div id="more-news" style="display: none;">
-          <a href="#" class="list-group-item list-group-item-action">
-            <h5 class="mb-1">Published a paper in The Supercomputing journal</h5>
-            <!-- <p class="mb-1">Brief summary of another news update.</p> -->
-            <small>Posted on July 30, 2022</small>
-          </a>
-          <a href="#" class="list-group-item list-group-item-action">
-            <h5 class="mb-1">Defended my master thesis</h5>
-            <!-- <p class="mb-1">Brief summary of another news update.</p> -->
-            <small>Posted on July 6, 2022</small>
-          </a>
-          <a href="#" class="list-group-item list-group-item-action">
-            <h5 class="mb-1">Published a paper in IEEE ACCESS</h5>
-            <!-- <p class="mb-1">Brief summary of another news update.</p> -->
-            <small>Posted on March 16, 2022</small>
-          </a>
-        </div>
-      </div>
-      <div class="text-center mt-3">
-        <button id="toggleNews" class="btn btn-link" onclick="toggleNews()">Show All</button>
-      </div>
-    </section>
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3">
-      <div class="container">
-        <p>&copy; 2025 Amir Etefaghi Daryani. All Rights Reserved.</p>
-      </div>
-    </footer>
-    <a href="https://info.flagcounter.com/bJg6"><img src="https://s01.flagcounter.com/mini/bJg6/bg_FFFFFF/txt_000000/border_CCCCCC/flags_0/" alt="Flag Counter" border="0"></a>
+      <text id="lblMulti" class="scene-label" x="-85" y="-80">OBJECT · 3 VIEWS</text>
+      <text id="lblPrim" class="scene-label" x="-95" y="-140">SUPERQUADRICS · CHAIR</text>
+      <text id="lblEnv" class="scene-label" x="-120" y="-260">BIRD'S EYE · PERCEPTION</text>
+    </svg>
   </div>
+
+  <div class="page">
+
+  <div class="vf-corner tl"></div>
+  <div class="vf-corner tr"></div>
+  <div class="vf-corner bl"></div>
+  <div class="vf-corner br"></div>
+
+  <div class="hud">
+    <div class="hud-left">
+      <span class="hud-item"><span class="rec-dot"></span><span class="val">LIVE</span></span>
+      <span class="hud-item hide-mobile"><span class="lbl">FOCUS</span><span class="val">LOCKED</span></span>
+      <span class="hud-item"><span class="lbl">f/</span><span class="val" id="hud-fstop">1.4</span></span>
+      <span class="hud-item"><span class="lbl">ISO</span><span class="val" id="hud-iso">100</span></span>
+      <span class="hud-item hide-mobile"><span class="lbl">ZOOM</span><span class="val" id="hud-focal">24mm</span></span>
+    </div>
+    <div class="hud-right">
+      <span class="hud-item hide-mobile"><span class="val">29.65°N 82.32°W</span></span>
+      <span class="hud-item"><span class="val" id="hud-clock">--:--:--</span></span>
+    </div>
+  </div>
+
+  <nav class="sidenav" id="sidenav">
+    <a href="#hero" data-target="hero"><span class="dash"></span>HERO</a>
+    <a href="#current" data-target="current"><span class="dash"></span>NOW</a>
+    <a href="#about" data-target="about"><span class="dash"></span>ABOUT</a>
+    <a href="#log" data-target="log"><span class="dash"></span>LOG</a>
+    <a href="#research" data-target="research"><span class="dash"></span>PAPERS</a>
+    <a href="#work" data-target="work"><span class="dash"></span>WORK</a>
+    <a href="#contact" data-target="contact"><span class="dash"></span>CONTACT</a>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="hero-eyebrow">01 · COMPUTER VISION RESEARCHER</span>
+        <h1>Amir Etefaghi<br>Daryani</h1>
+        <div class="role mono">Ph.D. Candidate — Agricultural &amp; Biological Engineering, University of Florida</div>
+        <p class="tagline">I turn multi-view images into compact 3D worlds — query-based transformers and analytic superquadric primitives, standing in for rigid calibration and dense voxel grids.</p>
+
+        <div class="hero-facts">
+          <div>
+            <span class="lbl">BASED</span>
+            <span class="f-val">Gainesville, FL</span>
+          </div>
+          <div>
+            <span class="lbl">LAB</span>
+            <span class="f-val">UF · Medeiros Lab</span>
+          </div>
+          <div>
+            <span class="lbl">FOCUS</span>
+            <span class="f-val">3D Shape · Multi-View · Generative AI</span>
+          </div>
+        </div>
+
+        <div class="hero-links">
+          <a class="btn primary" href="mailto:amir.etefaghidar@ufl.edu">Email me</a>
+          <a class="btn" href="resume.html">Resume ↗</a>
+          <a class="btn" href="https://scholar.google.com/citations?user=bo6Nt6kAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
+          <a class="btn" href="https://github.com/amiretefaghi" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+
+      <div class="portrait-box">
+        <div class="portrait-frame">
+          <div class="bbox-tag">AMIR_ETEFAGHI · 0.99</div>
+          <img src="images/me.jpg" alt="Portrait of Amir Etefaghi Daryani">
+          <div class="bbox">
+            <div class="corner-tick tl"></div>
+            <div class="corner-tick tr"></div>
+            <div class="corner-tick bl"></div>
+            <div class="corner-tick br"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-cue"><span>SCROLL</span><div class="bar"></div></div>
+  </section>
+
+  <section id="current">
+    <div class="wrap">
+      <div class="frame-label"><span class="fnum">02</span> NOW — Current focus</div>
+      <h2 class="sec-title">What's running</h2>
+      <p class="sec-sub">Last calibrated: July 2026 · Gainesville, FL</p>
+
+      <p class="now-lead">As a <em>Graduate Research Assistant</em> working with Prof. Henry Medeiros at the University of Florida, I build systems that turn uncalibrated multi-view images directly into compact, interpretable 3D worlds — no camera calibration, no dense voxel grids, just analytic geometric primitives.</p>
+
+      <div class="chip-row">
+        <div class="chip">
+          <span class="chip-tag">3D SHAPE · In PROGRESS</span>
+          <h4>ViSQ</h4>
+          <p>A query based multiview transformer utilizing a soft point to query assignment mechanism and a two stage decoder for predicting analytic superquadrics directly in world coordinates from RGB images.</p>
+        </div>
+        <div class="chip">
+          <span class="chip-tag">OCCUPANCY · IN PROGRESS</span>
+          <h4>SuperFormer</h4>
+          <p>An end-to-end multi-view transformer for dense 3D semantic occupancy, replacing rigid voxel grids with interpretable superquadric primitive assemblies.</p>
+        </div>
+        <div class="chip">
+          <span class="chip-tag">DETECTION · CVPR 2025</span>
+          <h4>CaMuViD</h4>
+          <p>Calibration-free multi-view object detection that fuses features across camera perspectives directly in image space — no bird's-eye view needed.</p>
+        </div>
+      </div>
+
+      <div class="last-ping">LAST MILESTONE: <span class="val">ViSQ submitted to NeurIPS 2026</span> — pending review</div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="frame-label"><span class="fnum">03</span> ABOUT — A brief dispatch</div>
+      <h2 class="sec-title">From pixels to primitives</h2>
+      <p class="sec-sub">Bridging 2D images and 3D spatial intelligence.</p>
+
+      <div class="about-grid">
+        <div>
+          <p>My research bridges 2D images and 3D spatial intelligence — designing query-based transformers and implicit neural decoders that reconstruct 3D shape and scene structure without relying on rigid camera calibration.</p>
+          <p>At the University of Florida, I work with Prof. Henry Medeiros on ViSQ and SuperFormer, frameworks that fuse self-supervised foundation models with geometric primitives to turn unstructured multi-view captures into compact, analytic 3D assemblies. Earlier work — CaMuViD and CLASP — focused on calibration-free multi-view detection and tracking; before that, I worked independently on generative facial synthesis and image forensics (E2F-GAN, IRL-Net).</p>
+          <p>Day to day that's Python and PyTorch, deformable attention, and a lot of thinking about how to represent the world with fewer, more meaningful numbers. I'm driven by turning complex, unstructured visual environments into clean 3D assets for the next generation of spatial computing and creative tools.</p>
+        </div>
+
+        <div class="stat-list">
+          <div class="stat"><span class="num">6</span><span class="lbl">PUBLISHED<br>PAPERS</span></div>
+          <div class="stat"><span class="num">3.95</span><span class="lbl">PH.D.<br>GPA</span></div>
+          <div class="stat"><span class="num">2</span><span class="lbl">CORE<br>PROJECTS</span></div>
+          <div class="stat"><span class="num">1</span><span class="lbl">NEURIPS<br>SUBMISSION</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="log">
+    <div class="wrap">
+      <div class="frame-label"><span class="fnum">04</span> LOG — Research timeline</div>
+      <h2 class="sec-title">Frame by frame</h2>
+      <p class="sec-sub">A chronological capture of the journey so far.</p>
+
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-date">2026</div>
+          <div class="t-title">ViSQ submitted to NeurIPS</div>
+          <div class="t-desc">Vision-to-SuperQuadrics: a query-based multiview transformer for 3D shape abstraction, with Prof. Henry Medeiros.</div>
+        </div>
+        <div class="t-item">
+          <div class="t-date">FEB 2025</div>
+          <div class="t-title">CaMuViD accepted to CVPR</div>
+          <div class="t-desc">Calibration-free multi-view detection work accepted at the Conference on Computer Vision and Pattern Recognition.</div>
+        </div>
+        <div class="t-item">
+          <div class="t-date">2023</div>
+          <div class="t-title">Published in IJCB</div>
+          <div class="t-desc">Co-authored "Synthetic Face Generation via Eyes-to-Face Inpainting."</div>
+        </div>
+        <div class="t-item">
+          <div class="t-date">2023</div>
+          <div class="t-title">Published in IEEE ACCESS</div>
+          <div class="t-desc">IRL-Net: inpainted region localization via spatial attention.</div>
+        </div>
+        <div class="t-item">
+          <div class="t-date">2023</div>
+          <div class="t-title">Published in The Journal of Supercomputing</div>
+          <div class="t-desc">AdaInNet: an RL-based adaptive inference engine for distributed DNN offloading in IoT-FOG applications.</div>
+        </div>
+        <div class="t-item">
+          <div class="t-date">MAY 2023</div>
+          <div class="t-title">Began the Ph.D. journey</div>
+          <div class="t-desc">Joined Prof. Henry Medeiros' lab at UF to start ViSQ, SuperFormer, CaMuViD, and CLASP.</div>
+        </div>
+        <div class="t-item">
+          <div class="t-date">JUL 2022</div>
+          <div class="t-title">Defended master's thesis</div>
+          <div class="t-desc">Completed M.S. in Electrical Engineering at Amirkabir University of Technology, under Prof. Saeed Sharifian.</div>
+        </div>
+        <div class="t-item">
+          <div class="t-date">2022</div>
+          <div class="t-title">Published in IEEE ACCESS</div>
+          <div class="t-desc">Co-authored E2FGAN: edge-aware coarse-to-fine GANs for facial inpainting.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="research">
+    <div class="wrap">
+      <div class="frame-label"><span class="fnum">05</span> PAPERS — Publications</div>
+      <h2 class="sec-title">Published work</h2>
+      <p class="sec-sub">NeurIPS · CVPR · IJCB · IEEE ACCESS · Journal of Supercomputing</p>
+
+      <div class="pub-list">
+        <div class="pub">
+          <div class="pub-idx mono">01</div>
+          <div>
+            <div class="pub-title">ViSQ: Vision-to-SuperQuadrics Query-Based Multiview Transformer for 3D Shape Abstraction</div>
+            <div class="pub-meta">with Prof. Henry Medeiros · Submitted to NeurIPS 2026</div>
+          </div>
+          <span class="pub-venue" style="color:var(--text-dim); border-color:var(--border)">NEURIPS</span>
+        </div>
+        <div class="pub">
+          <div class="pub-idx mono">02</div>
+          <div>
+            <div class="pub-title">CaMuViD: Calibration-Free Multi-View Detection</div>
+            <div class="pub-meta">with Prof. Henry Medeiros · Conference on Computer Vision and Pattern Recognition (CVPR) · 2025</div>
+          </div>
+          <a class="pub-venue" href="Camuvid.html">CVPR ↗</a>
+        </div>
+        <div class="pub">
+          <div class="pub-idx mono">03</div>
+          <div>
+            <div class="pub-title">Synthetic Face Generation via Eyes-to-Face Inpainting</div>
+            <div class="pub-meta">with A. Hassanpour et al. · IJCB · 2023</div>
+          </div>
+          <span class="pub-venue" style="color:var(--text-dim); border-color:var(--border)">IJCB</span>
+        </div>
+        <div class="pub">
+          <div class="pub-idx mono">04</div>
+          <div>
+            <div class="pub-title">IRL-Net: Inpainted Region Localization Network via Spatial Attention</div>
+            <div class="pub-meta">IEEE ACCESS · 2023</div>
+          </div>
+          <a class="pub-venue" href="IRL-Net.html">ACCESS ↗</a>
+        </div>
+        <div class="pub">
+          <div class="pub-idx mono">05</div>
+          <div>
+            <div class="pub-title">AdaInNet: RL-Based Adaptive Inference Engine for Distributed DNN Offloading in IoT-FOG Applications</div>
+            <div class="pub-meta">with Prof. Saeed Sharifian · The Journal of Supercomputing · 2023</div>
+          </div>
+          <a class="pub-venue" href="AdaInNet.html">JoS ↗</a>
+        </div>
+        <div class="pub">
+          <div class="pub-idx mono">06</div>
+          <div>
+            <div class="pub-title">E2FGAN: Edge-Aware Coarse-to-Fine GANs for Facial Inpainting</div>
+            <div class="pub-meta">with A. Hassanpour et al. · IEEE ACCESS · 2022</div>
+          </div>
+          <a class="pub-venue" href="EtoF.html">ACCESS ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="frame-label"><span class="fnum">06</span> WORK — Projects in the field</div>
+      <h2 class="sec-title">Selected projects</h2>
+      <p class="sec-sub">From multi-view geometry to airport checkpoints.</p>
+
+      <div class="proj-grid">
+        <div class="proj-card">
+          <div class="proj-media">
+            <span class="proj-tag">3d shape · 0.98</span>
+            <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+              <rect x="0" y="0" width="400" height="250" fill="#1a1a1a"/>
+              <g stroke="#3a3a3a" stroke-width="1" fill="none">
+                <path d="M40,30 L185,118"/>
+                <path d="M360,30 L215,118"/>
+                <path d="M200,225 L200,140"/>
+              </g>
+              <g stroke="#57574f" stroke-width="1" fill="none" opacity=".7">
+                <rect x="30" y="15" width="20" height="14"/>
+                <rect x="350" y="15" width="20" height="14"/>
+                <rect x="190" y="212" width="20" height="14"/>
+              </g>
+              <g stroke="#f3f3f1" stroke-width="1.4" fill="none" opacity=".85">
+                <rect x="168" y="96" width="64" height="46" rx="18"/>
+                <circle cx="200" cy="88" r="16"/>
+                <rect x="182" y="140" width="36" height="20" rx="9"/>
+              </g>
+            </svg>
+          </div>
+          <div class="proj-body">
+            <h4>ViSQ: Vision-to-SuperQuadrics</h4>
+            <p>Query-based multiview transformer predicting analytic superquadric primitives directly in world coordinates from RGB images — no online 3D optimization needed.</p>
+            <div class="proj-foot">
+              <span class="proj-stack">PYTORCH · TRANSFORMERS</span>
+              <span class="proj-link" style="color:var(--text-dim)">In PROGRESS</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-media">
+            <span class="proj-tag">occupancy · 0.94</span>
+            <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+              <rect x="0" y="0" width="400" height="250" fill="#1a1a1a"/>
+              <g stroke="#2c2c2c" stroke-width="1">
+                <line x1="0" y1="190" x2="400" y2="190"/>
+                <line x1="0" y1="205" x2="400" y2="205"/>
+                <line x1="0" y1="222" x2="400" y2="222"/>
+              </g>
+              <g stroke="#f3f3f1" stroke-width="1.3" fill="none" opacity=".85">
+                <rect x="55" y="150" width="70" height="34" rx="8"/>
+                <rect x="72" y="130" width="36" height="22" rx="7"/>
+                <rect x="185" y="160" width="86" height="38" rx="9"/>
+                <rect x="205" y="138" width="46" height="24" rx="7"/>
+                <rect x="305" y="170" width="56" height="28" rx="7"/>
+                <rect x="317" y="152" width="30" height="20" rx="6"/>
+              </g>
+            </svg>
+          </div>
+          <div class="proj-body">
+            <h4>SuperFormer: 3D Occupancy Abstraction</h4>
+            <p>End-to-end multi-view transformer for dense 3D semantic occupancy, replacing rigid voxel grids with interpretable, analytic superquadric primitive assemblies.</p>
+            <div class="proj-foot">
+              <span class="proj-stack">PYTORCH · TRANSFORMERS</span>
+              <span class="proj-link" style="color:var(--text-dim)">In progress</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-media">
+            <span class="proj-tag">multi-view · 0.97</span>
+            <img src="images/CaMuViD.png" alt="CaMuViD project visualization">
+          </div>
+          <div class="proj-body">
+            <h4>CaMuViD: Calibration-Free Multi-View Detection</h4>
+            <p>Extends multi-view detection to work directly in each camera's image space, removing the need for calibration or a bird's-eye view while improving cross-view feature fusion.</p>
+            <div class="proj-foot">
+              <span class="proj-stack">PYTHON · PYTORCH</span>
+              <a class="proj-link" href="Camuvid.html">Learn more →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-media">
+            <span class="proj-tag">tracking · 0.95</span>
+            <img src="images/clasp.png" alt="CLASP project visualization">
+          </div>
+          <div class="proj-body">
+            <h4>CLASP: Spatial-Temporal Instance Association</h4>
+            <p>Real-time multi-object tracking pipeline that associates interacting people and belongings in high-density, heavily occluded airport video, funded by DHS S&amp;T via ALERT.</p>
+            <div class="proj-foot">
+              <span class="proj-stack">PYTHON · PYTORCH</span>
+              <span class="proj-link" style="color:var(--text-dim)">In progress</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-media">
+            <span class="proj-tag">inpainting · 0.93</span>
+            <img src="images/EtoF.jpg" alt="E2F-GAN project visualization">
+          </div>
+          <div class="proj-body">
+            <h4>E2F-GAN: Eyes-to-Face Inpainting</h4>
+            <p>Reconstructs a full face from just the periocular region using edge-aware, coarse-to-fine GANs — preserving demographic and biometric properties in the result.</p>
+            <div class="proj-foot">
+              <span class="proj-stack">PYTHON · TENSORFLOW</span>
+              <a class="proj-link" href="EtoF.html">Learn more →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-media">
+            <span class="proj-tag">forensics · 0.96</span>
+            <img src="images/IRL-Net.png" alt="IRL-Net project visualization">
+          </div>
+          <div class="proj-body">
+            <h4>IRL-Net: Inpainted Region Localization</h4>
+            <p>Localizes regions manipulated by modern image inpainting methods — forensic detection tuned to catch traces that are nearly invisible to the eye.</p>
+            <div class="proj-foot">
+              <span class="proj-stack">PYTHON · TENSORFLOW</span>
+              <a class="proj-link" href="IRL-Net.html">Learn more →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <div class="proj-media">
+            <span class="proj-tag">edge-ai · 0.91</span>
+            <img src="images/AdaInNet.jpg" alt="AdaInNet project visualization">
+          </div>
+          <div class="proj-body">
+            <h4>AdaInNet: Adaptive Inference for IoT-FOG</h4>
+            <p>A reinforcement-learning-driven engine that selects only the DNN layers needed for sufficient accuracy per task, cutting the cost of offloading inference from IoT devices.</p>
+            <div class="proj-foot">
+              <span class="proj-stack">PYTHON · TENSORFLOW</span>
+              <a class="proj-link" href="AdaInNet.html">Learn more →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap contact-inner">
+      <div class="frame-label"><span class="fnum">07</span> CONTACT — Get in touch</div>
+      <h2 class="contact-big">Let's talk about <span class="accent">vision</span>, robotics, or research.</h2>
+
+      <div class="contact-row">
+        <a href="mailto:amir.etefaghidar@ufl.edu">amir.etefaghidar@ufl.edu</a>
+        <span style="color:var(--text-dim)">·</span>
+        <a href="resume.html">Resume ↗</a>
+        <span style="color:var(--text-dim)">·</span>
+        <span>Gainesville, FL</span>
+      </div>
+
+      <div class="social-grid">
+        <a href="https://www.linkedin.com/in/amir-etefaghi/" target="_blank" rel="noopener">linkedin ↗</a>
+        <a href="https://github.com/amiretefaghi" target="_blank" rel="noopener">github ↗</a>
+        <a href="https://scholar.google.com/citations?user=bo6Nt6kAAAAJ&hl=en" target="_blank" rel="noopener">scholar ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Amir Etefaghi Daryani. All rights reserved.</span>
+    <span>v2026.1 · Gainesville, FL · 29.65°N 82.32°W</span>
+  </footer>
+
+  </div>
+
 <script>
-  function toggleNews() {
-    var moreNews = document.getElementById('more-news');
-    var btn = document.getElementById('toggleNews');
-    if (moreNews.style.display === 'none') {
-      moreNews.style.display = 'block';
-      btn.innerText = 'Show Less';
-    } else {
-      moreNews.style.display = 'none';
-      btn.innerText = 'Show All';
+  (function(){
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduceMotion) return;
+
+    var elFstop = document.getElementById('hud-fstop');
+    var elIso = document.getElementById('hud-iso');
+    var elFocal = document.getElementById('hud-focal');
+
+    var camHero = document.getElementById('camHero');
+    var layerCamsAux = document.getElementById('layerCamsAux');
+    var camLines = document.getElementById('camLines');
+    var layerEnv = document.getElementById('layerEnv');
+
+    var lblMulti = document.getElementById('lblMulti');
+    var lblPrim = document.getElementById('lblPrim');
+    var lblEnv = document.getElementById('lblEnv');
+
+    var prims = [
+      { el: document.getElementById('prim1'),
+        state1: {x:-60, y:-60, w:120, h:120, rx:16},
+        state2: {x:-50, y:-100, w:100, h:80, rx:10},
+        state3: {x:-180, y:-160, w:50, h:100, rx:6} },
+      { el: document.getElementById('prim2'),
+        state1: {x:-40, y:-40, w:80, h:80, rx:10},
+        state2: {x:-65, y:-20, w:130, h:24, rx:6},
+        state3: {x:120, y:60, w:45, h:90, rx:6} },
+      { el: document.getElementById('prim3'),
+        state1: {x:-20, y:-20, w:40, h:40, rx:4},
+        state2: {x:-55, y:4, w:16, h:80, rx:4},
+        state3: {x:-30, y:-240, w:45, h:90, rx:6} },
+      { el: document.getElementById('prim4'),
+        state1: {x:-20, y:-20, w:40, h:40, rx:4},
+        state2: {x:39, y:4, w:16, h:80, rx:4},
+        state3: {x:-150, y:200, w:45, h:90, rx:6} },
+      { el: document.getElementById('prim5'),
+        state1: {x:-10, y:-10, w:20, h:20, rx:2},
+        state2: {x:-35, y:4, w:12, h:70, rx:3},
+        state3: {x:-200, y:120, w:24, h:24, rx:12} },
+      { el: document.getElementById('prim6'),
+        state1: {x:-10, y:-10, w:20, h:20, rx:2},
+        state2: {x:23, y:4, w:12, h:70, rx:3},
+        state3: {x:180, y:-60, w:24, h:24, rx:12} }
+    ];
+
+    function mapRange(val, inMin, inMax, outMin, outMax) {
+      if (val <= inMin) return outMin;
+      if (val >= inMax) return outMax;
+      return outMin + (outMax - outMin) * ((val - inMin) / (inMax - inMin));
     }
+
+    function interpolatePrim(primData, phase) {
+      var sStart, sEnd, localP;
+      if (phase < 0.35) {
+        sStart = primData.state1; sEnd = primData.state1; localP = 0;
+      } else if (phase >= 0.35 && phase < 0.55) {
+        sStart = primData.state1; sEnd = primData.state2; 
+        localP = (phase - 0.35) / 0.20;
+      } else if (phase >= 0.55 && phase < 0.70) {
+        sStart = primData.state2; sEnd = primData.state2; localP = 0;
+      } else if (phase >= 0.70 && phase < 0.90) {
+        sStart = primData.state2; sEnd = primData.state3;
+        localP = (phase - 0.70) / 0.20;
+      } else {
+        sStart = primData.state3; sEnd = primData.state3; localP = 1;
+      }
+
+      var x = sStart.x + (sEnd.x - sStart.x) * localP;
+      var y = sStart.y + (sEnd.y - sStart.y) * localP;
+      var w = sStart.w + (sEnd.w - sStart.w) * localP;
+      var h = sStart.h + (sEnd.h - sStart.h) * localP;
+      var rx = sStart.rx + (sEnd.rx - sStart.rx) * localP;
+
+      primData.el.setAttribute('x', x.toFixed(1));
+      primData.el.setAttribute('y', y.toFixed(1));
+      primData.el.setAttribute('width', w.toFixed(1));
+      primData.el.setAttribute('height', h.toFixed(1));
+      primData.el.setAttribute('rx', rx.toFixed(1));
+    }
+
+    var ticking = false;
+
+    function update(){
+      ticking = false;
+      var docEl = document.documentElement;
+      var maxScroll = docEl.scrollHeight - window.innerHeight;
+      var progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+
+      var camX = mapRange(progress, 0.0, 0.2, 0, -200);
+      var camY = mapRange(progress, 0.0, 0.2, 0, -130);
+      var camS = mapRange(progress, 0.0, 0.2, 8, 1);
+      var camR = mapRange(progress, 0.0, 0.2, 0, 33);
+      camHero.setAttribute('transform', 'translate(' + camX + ', ' + camY + ') rotate(' + camR + ') scale(' + camS + ')');
+
+      var auxOp = mapRange(progress, 0.15, 0.25, 0, 1);
+      var camsOut = mapRange(progress, 0.3, 0.4, 1, 0);
+      layerCamsAux.style.opacity = Math.min(auxOp, camsOut);
+      camHero.style.opacity = camsOut;
+      camLines.style.opacity = Math.min(auxOp, camsOut);
+
+      var p2Op = mapRange(progress, 0.35, 0.45, 0, 1);
+      for(var i=1; i<prims.length; i++) {
+        prims[i].el.style.opacity = p2Op;
+      }
+
+      for(var i=0; i<prims.length; i++) {
+        interpolatePrim(prims[i], progress);
+      }
+
+      layerEnv.style.opacity = mapRange(progress, 0.75, 0.9, 0, 1);
+
+      lblMulti.classList.toggle('active', progress > 0.15 && progress < 0.35);
+      lblPrim.classList.toggle('active', progress > 0.45 && progress < 0.65);
+      lblEnv.classList.toggle('active', progress > 0.80);
+
+      var fstops = [1.4, 2, 2.8, 4, 5.6, 8, 11, 16];
+      var isos = [100, 200, 400, 800, 1600, 3200, 6400];
+      var focals = [200, 135, 105, 85, 70, 50, 35, 28, 24];
+
+      var fi = Math.min(fstops.length - 1, Math.floor(progress * fstops.length));
+      var ii = Math.min(isos.length - 1, Math.floor(progress * isos.length));
+      var zi = Math.min(focals.length - 1, Math.floor(progress * focals.length));
+
+      if(elFstop) elFstop.textContent = fstops[fi].toFixed(1);
+      if(elIso) elIso.textContent = isos[ii];
+      if(elFocal) elFocal.textContent = focals[zi] + 'mm';
+    }
+
+    function onScroll(){
+      if(!ticking){
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+
+  function tick(){
+    var el = document.getElementById('hud-clock');
+    if(!el) return;
+    var d = new Date();
+    var h = String(d.getHours()).padStart(2,'0');
+    var m = String(d.getMinutes()).padStart(2,'0');
+    var s = String(d.getSeconds()).padStart(2,'0');
+    el.textContent = h+':'+m+':'+s;
   }
+  tick();
+  setInterval(tick, 1000);
+
+  (function(){
+    var links = document.querySelectorAll('.sidenav a');
+    var map = {};
+    links.forEach(function(l){ map[l.dataset.target] = l; });
+
+    var sections = document.querySelectorAll('section[id]');
+    if('IntersectionObserver' in window){
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          var id = entry.target.id;
+          if(entry.isIntersecting){
+            links.forEach(function(l){ l.classList.remove('active'); });
+            if(map[id]) map[id].classList.add('active');
+          }
+        });
+      }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+      sections.forEach(function(s){ obs.observe(s); });
+    }
+  })();
 </script>
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
